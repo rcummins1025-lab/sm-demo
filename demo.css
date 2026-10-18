@@ -1,0 +1,15 @@
+/* Demo-only additions */
+.demo-badge{position:fixed;right:10px;top:10px;z-index:60;font:600 10.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Arial,sans-serif;letter-spacing:.04em;text-transform:uppercase;color:rgba(255,255,255,.72);background:rgba(17,20,29,.55);border:1px solid rgba(255,255,255,.18);padding:5px 8px;border-radius:999px;pointer-events:none;backdrop-filter:blur(4px)}
+.demo-toast{position:fixed;left:50%;bottom:88px;transform:translateX(-50%);z-index:70;background:#11141d;color:#fff;font-size:.85rem;font-weight:600;padding:.6rem 1rem;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.25);max-width:90vw;text-align:center}
+.src-list{display:flex;flex-direction:column;gap:.55rem;margin:.25rem 0 .6rem}
+.src-row{display:grid;grid-template-columns:7.5rem 1fr 2rem;align-items:center;gap:.6rem;font-size:.92rem}
+.src-row__label{font-weight:600;white-space:nowrap}
+.src-row__bar{height:.6rem;border-radius:999px;background:var(--line-soft,#eef1f7);overflow:hidden}
+.src-row__bar span{display:block;height:100%;border-radius:999px;background:#111}
+.src-row--new .src-row__bar span{background:#10a37f}
+.src-row__num{text-align:right;font-variant-numeric:tabular-nums}
+.lead-src-notes{margin:0;padding-left:1.1rem;line-height:1.9}
+[hidden-by-filter]{display:none!important}
+@media (min-width:900px){.demo-badge{top:auto;bottom:14px;right:14px;background:rgba(17,20,29,.06);color:#6b7488;border-color:#e3e7f0}}
+@media (max-width:899px){.demo-badge{top:auto;bottom:86px;right:10px;background:rgba(255,255,255,.9);color:#6b7488;border-color:#e3e7f0}}
+@media (min-width:700px){.app-page-head .add-lead{width:auto;flex:0 0 auto;padding:0 1.25rem;min-height:2.75rem}}
