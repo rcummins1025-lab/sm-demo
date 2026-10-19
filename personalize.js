@@ -55,15 +55,15 @@
   var dateH=document.querySelector('.today-date');
   if(dateH&&owner){var hr=new Date().getHours(),g=document.createElement('p');g.className='sm-greet';g.textContent=(hr<12?'Good morning, ':hr<17?'Good afternoon, ':'Good evening, ')+owner;dateH.parentNode.insertBefore(g,dateH);}
 
-  // ---- towns: ~40% of the fake book (Portsmouth 14 + Hampton 10 + Exeter 10 + Rye 7 = 41 of 100 weight) ----
+  // ---- towns: ~40% of the fake book (Portsmouth 14 + Exeter 10 + Stratham 7 + Rye 7 = 38 of 100 town weight) ----
   if(town){
     var st=p.state;
-    var re=/\b(Portsmouth(?! Ave)|(?<!North )Hampton|Exeter|Rye)(, (?:NH|MA)(?: \d{5})?)?\b/g;
+    var re=/\b(Portsmouth(?! Ave)|Exeter|Stratham|Rye)(, (?:NH|MA)(?: \d{5})?)?\b/g;
     var rep=function(m,t,tail){return town+(tail?(st?', '+st:''):'');};
     var tw=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode:function(n){return n.parentNode.closest('script,style,.sm-banner')?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT;}}),n,list=[];
     while((n=tw.nextNode()))list.push(n);
     list.forEach(function(n){var v=n.nodeValue;re.lastIndex=0;if(re.test(v)){re.lastIndex=0;n.nodeValue=v.replace(re,rep);}});
-    var only=/^(Portsmouth|Hampton|Exeter|Rye)$/;
+    var only=/^(Portsmouth|Exeter|Stratham|Rye)$/;
     document.querySelectorAll('[data-town]').forEach(function(el){if(only.test(el.dataset.town))el.dataset.town=town;});
     var sel=document.querySelector('select[name=town]');
     if(sel){var seen={};[].slice.call(sel.options).forEach(function(o){if(only.test(o.value)||o.value===town){if(seen[town])o.remove();else{seen[town]=1;o.value=town;o.textContent=town;}}});}
