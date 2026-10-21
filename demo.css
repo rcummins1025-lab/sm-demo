@@ -46,3 +46,8 @@
 @media (min-width:700px){.sm-banner{padding:24px 26px}.sm-banner__title{font-size:26px}.sm-banner__body{max-width:620px}.sm-banner__btn{width:auto}}
 .sm-banner__title{text-wrap:balance}
 @media (min-width:900px){.sm-id>.sm-mono{display:none}}
+/* Optional brand color (?color=). --sm-accent is pre-darkened in personalize.js so white text passes 4.5:1. */
+.sm-brand .sm-mono{background-color:var(--sm-accent)}
+.sm-brand .sm-banner::before{background-color:var(--sm-accent);opacity:.7}
+.sm-brand .goal-bar__rec,.sm-brand .src-row--new .src-row__bar span{background:var(--sm-accent)!important}
+.sm-brand .add-lead,.sm-brand a.add-lead{background:var(--sm-accent)!important}
