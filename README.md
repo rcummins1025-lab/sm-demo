@@ -2,7 +2,7 @@
 
 A static, click-through demo of the Service Momentum Command Center for a made-up business, Coastal Comfort HVAC.
 
-Every customer, address, phone number, and dollar amount here is fictional. Phone numbers use the reserved 555-01xx range. The demo has no backend and doesn't connect to any real account or database.
+Every customer, address, phone number, and dollar amount here is fictional. Customers are labeled Sample Customer 1, 2, 3, and so on, with obviously fake phones like (555) 010-0001 and streets like 1 Sample St. The demo has no backend and doesn't connect to any real account or database.
 
 ## Personalized preview links
 
