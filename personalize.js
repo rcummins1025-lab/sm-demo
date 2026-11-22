@@ -131,6 +131,18 @@
     ['data-money-recorded','data-money-estimated','data-money-total','data-goal'].forEach(function(attr){
       document.querySelectorAll('['+attr+']').forEach(function(el){var n=parseInt(el.getAttribute(attr),10);if(!isNaN(n))el.setAttribute(attr,String(money(n)));});
     });
+    var noteMap={
+      'Daikin, two heads. Side door entrance.':'Long vent run to the roof. Side door entrance.',
+      'Ceiling cassette in the kitchen. Bring the tall ladder.':'Vent terminates high on the second story. Bring the tall ladder.',
+      'Had a musty smell last summer; drain line was slow. Check it each visit.':'Clothes were taking two cycles last year. Check the outside flap each visit.',
+      'Units in two upstairs bedrooms and the living room. Dog in the yard, text before arriving.':'Laundry is on the second floor. Dog in the yard, text before arriving.',
+      'Mitsubishi Hyper-Heat, one head in the sunroom.':'Rigid vent through the crawl space. Tight access behind the dryer.',
+      'Three-zone Mitsubishi. Filters were very dirty on the first visit.':'Long vinyl run was packed with lint on the first visit.',
+      'Head unit over the stairs. Needs drop cloths.':'Vent runs through the garage. Needs drop cloths.',
+      'Outdoor unit on the deck side. Gate code 2240.':'Exterior vent is on the deck side. Walk around, do not use the side gate.',
+      'Fujitsu wall units. Asked about a maintenance plan.':'Asked about a yearly cleaning plan.'
+    };
+    document.querySelectorAll('p.notes').forEach(function(el){var v=el.textContent.replace(/\s+/g,' ').trim();if(noteMap[v])el.textContent=noteMap[v];});
   }
 
   // ---- welcome banner (first page of the session) ----
