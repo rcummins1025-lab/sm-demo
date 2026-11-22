@@ -143,6 +143,15 @@
       'Fujitsu wall units. Asked about a maintenance plan.':'Asked about a yearly cleaning plan.'
     };
     document.querySelectorAll('p.notes').forEach(function(el){var v=el.textContent.replace(/\s+/g,' ').trim();if(noteMap[v])el.textContent=noteMap[v];});
+    // Hide lead-source tracking (this trade does not offer attribution)
+    var dropSrc=document.getElementById('lead-sources');
+    if(dropSrc)dropSrc.remove();
+    document.querySelectorAll('ul.lead-src-notes,[data-leads-by-source]').forEach(function(el){var sec=el.closest('section')||el;sec.remove();});
+    document.querySelectorAll('h2').forEach(function(h){if(/Leads by source|UTM detail|Where they came from/.test(h.textContent)){var sec=h.closest('section');if(sec)sec.remove();}});
+    document.querySelectorAll('small').forEach(function(el){if(/lead sources/.test(el.textContent))el.textContent=el.textContent.replace(/,\s*lead sources/,'').replace(/lead sources,\s*/,'');});
+    document.querySelectorAll('.muted,span,td,li,p').forEach(function(el){
+      if(!el.childElementCount){var v=el.textContent;if(/\bWebsite lead\b/.test(v))el.textContent=v.replace(/\s*·\s*Website lead\b/,'').replace(/\bWebsite lead\b/,'');}
+    });
   }
 
   // ---- welcome banner (first page of the session) ----
