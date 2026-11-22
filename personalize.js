@@ -1,5 +1,5 @@
 /* Service Momentum demo: client-side personalization from URL params.
-   ?biz=&owner=&town=&state=&trade=  — all text is inserted with textContent (never innerHTML).
+   ?biz=&owner=&town=&state=&trade=  — trade may be mini-split, hvac, plumbing, or dryer-vent. All text is inserted with textContent (never innerHTML).
    Optional: &services=A,B,C (max 4, 40 chars each) &towns=X,Y,Z (max 6, 32 chars each) &color=1a73e8 (hex, no #). */
 (function(){
   var KEY='smPreview',root=document.documentElement;
@@ -13,12 +13,12 @@
   if(q.has('biz')||q.has('owner')||q.has('town')){
     p={biz:clean(q.get('biz'),48),owner:clean(q.get('owner'),24),town:clean(q.get('town'),32),
        state:(clean(q.get('state'),2).match(/^[A-Za-z]{2}$/)||[''])[0].toUpperCase(),
-       trade:({'mini-split':'mini-split','minisplit':'mini-split','hvac':'hvac','plumbing':'plumbing'})[clean(q.get('trade'),16).toLowerCase()]||''};
+       trade:({'mini-split':'mini-split','minisplit':'mini-split','hvac':'hvac','plumbing':'plumbing','dryer-vent':'dryer-vent','dryervent':'dryer-vent','dryer':'dryer-vent'})[clean(q.get('trade'),16).toLowerCase()]||''};
     p.owner=p.owner.split(' ')[0];
     extra(p,{services:q.get('services'),towns:q.get('towns'),color:q.get('color')});
     if(!p.biz&&!p.owner&&!p.town)p=null;
     try{if(p)sessionStorage.setItem(KEY,JSON.stringify(p));}catch(e){}
-  }else{try{var s=JSON.parse(sessionStorage.getItem(KEY)||'null');if(s&&typeof s==='object')p={biz:clean(s.biz,48),owner:clean(s.owner,24),town:clean(s.town,32),state:/^[A-Z]{2}$/.test(s.state||'')?s.state:'',trade:/^(mini-split|hvac|plumbing)$/.test(s.trade||'')?s.trade:''};if(p)extra(p,{services:Array.isArray(s.services)?s.services.join(','):'',towns:Array.isArray(s.towns)?s.towns.join(','):'',color:s.color});}catch(e){}}
+  }else{try{var s=JSON.parse(sessionStorage.getItem(KEY)||'null');if(s&&typeof s==='object')p={biz:clean(s.biz,48),owner:clean(s.owner,24),town:clean(s.town,32),state:/^[A-Z]{2}$/.test(s.state||'')?s.state:'',trade:/^(mini-split|hvac|plumbing|dryer-vent)$/.test(s.trade||'')?s.trade:''};if(p)extra(p,{services:Array.isArray(s.services)?s.services.join(','):'',towns:Array.isArray(s.towns)?s.towns.join(','):'',color:s.color});}catch(e){}}
   if(!p){done();return;}
   window.SM_PREVIEW=p;
   var biz=p.biz||'Your Company',owner=p.owner,town=p.town;
@@ -103,9 +103,34 @@
   }
 
   // ---- trade wording ----
-  if(!p.services.length&&(p.trade==='hvac'||p.trade==='plumbing')){
-    var lbl=p.trade==='hvac'?'HVAC maintenance':'Plumbing service';
+  if(!p.services.length&&(p.trade==='hvac'||p.trade==='plumbing'||p.trade==='dryer-vent')){
+    var lbl=p.trade==='hvac'?'HVAC maintenance':p.trade==='plumbing'?'Plumbing service':'Dryer vent cleaning';
     document.querySelectorAll('.cell-title').forEach(function(el){var t=el.firstChild;if(t&&t.nodeType===3&&t.nodeValue==='Mini-split cleaning')t.nodeValue=lbl;});
+  }
+
+  // ---- dryer-vent: swap leftover HVAC labels, "units" to dryers, and scale sample tickets into a $75–$330 range.
+  //      Yearly (12 month) intervals stay as they are. Default / other trades are untouched. ----
+  if(p.trade==='dryer-vent'){
+    var money=function(n){return Math.round(Number(n)/2);};
+    var moneyStr=function(n){return '$'+money(n).toLocaleString('en-US');};
+    var moneyRe=/\$([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)/g;
+    var swapMoney=function(v){return v.replace(moneyRe,function(m,num){var n=parseInt(num.replace(/,/g,''),10);return isNaN(n)?m:moneyStr(n);});};
+    var tw=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode:function(n){return n.parentNode.closest('script,style,.sm-banner')?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT;}}),tn,nodes=[];
+    while((tn=tw.nextNode()))nodes.push(tn);
+    nodes.forEach(function(n){
+      var v=n.nodeValue;
+      if(!p.services.length)v=v.replace(/Mini-split cleaning/g,'Dryer vent cleaning');
+      v=v.replace(/\b1 unit\b/g,'1 dryer').replace(/\b(\d+) units\b/g,'$1 dryers');
+      v=swapMoney(v);
+      v=v.replace(', your tracking number,',' ').replace('SMS · service reminders: Permission recorded','Reminder permission recorded');
+      n.nodeValue=v;
+    });
+    document.querySelectorAll('th,dt').forEach(function(el){if(el.textContent==='Units')el.textContent='Dryers';});
+    document.querySelectorAll('[data-label="Units"]').forEach(function(el){el.setAttribute('data-label','Dryers');});
+    document.querySelectorAll('[aria-label]').forEach(function(el){var a=el.getAttribute('aria-label');if(a&&a.indexOf('$')>=0)el.setAttribute('aria-label',swapMoney(a));});
+    ['data-money-recorded','data-money-estimated','data-money-total','data-goal'].forEach(function(attr){
+      document.querySelectorAll('['+attr+']').forEach(function(el){var n=parseInt(el.getAttribute(attr),10);if(!isNaN(n))el.setAttribute(attr,String(money(n)));});
+    });
   }
 
   // ---- welcome banner (first page of the session) ----
@@ -117,7 +142,7 @@
     var b=document.createElement('section');b.className='sm-banner';b.setAttribute('aria-label','Welcome');
     var kick=document.createElement('p');kick.className='sm-banner__kick';kick.appendChild(mono('sm-mono--sm'));var kt=document.createElement('span');kt.textContent='Preview built for '+(owner||biz);kick.appendChild(kt);
     var h=document.createElement('h2');h.className='sm-banner__title';h.textContent='Here’s what '+poss+' Command Center could look like';
-    var what=p.trade==='plumbing'?'who’s due for service':p.trade==='hvac'?'who’s due for a tune-up':'who’s due for a cleaning';
+    var what=p.trade==='plumbing'?'who’s due for service':p.trade==='hvac'?'who’s due for a tune-up':p.trade==='dryer-vent'?'who’s due for a dryer vent cleaning':'who’s due for a cleaning';
     var d=document.createElement('p');d.className='sm-banner__body';d.textContent='One screen every morning: '+what+', new leads, and where the month stands.'+(town?' Sample customers around '+town+(near.length?' and nearby towns':'')+'.':near.length?' Sample customers around '+near.slice(0,2).join(' and ')+'.':'')+(p.services.length?' Sample jobs use your services.':'')+' Tap around, nothing here is real.';
     var btn=document.createElement('button');btn.type='button';btn.className='sm-banner__btn';btn.textContent='Take a look';
     var x=document.createElement('button');x.type='button';x.className='sm-banner__x';x.setAttribute('aria-label','Dismiss');x.textContent='×';

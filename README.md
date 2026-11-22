@@ -10,7 +10,8 @@ Add URL params and the demo shows the prospect's own version, entirely in the br
 
 `https://rcummins1025-lab.github.io/sm-demo/?biz=Choo%20Air&owner=Matthew&town=Island%20Park&state=NY`
 
-- `biz` business name (max 48 chars), `owner` first name (24), `town` main town (32), optional `state` (2 letters) and `trade` (`mini-split`, `hvac`, `plumbing`).
+- `biz` business name (max 48 chars), `owner` first name (24), `town` main town (32), optional `state` (2 letters) and `trade` (`mini-split`, `hvac`, `plumbing`, `dryer-vent`).
+- With `trade=dryer-vent`, sample jobs become dryer vent cleanings, “units” become dryers, and ticket sizes are scaled into a $75–$330 range. The 12-month due interval is unchanged. With no `trade` param the demo is unchanged.
 - Params are kept in sessionStorage and added to every internal link. All text is inserted as plain text, never HTML.
 - About 40% of the sample customers move to the given town; the rest stay generic. With no params the demo is plain Coastal Comfort HVAC.
 - Optional, for a more personal preview:

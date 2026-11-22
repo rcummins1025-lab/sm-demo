@@ -7,7 +7,7 @@
     else if(h==='#text'){ev.preventDefault();say('Opens your texts with their number filled in');}
     else if(h==='#map'){ev.preventDefault();say('Opens directions in Maps');}
     else if(h==='#refresh'){ev.preventDefault();say('Marked done. Next cleaning due in 12 months');}
-    else if(h==='#add-lead'){ev.preventDefault();say('Add a lead: name, phone, town, units');}
+    else if(h==='#add-lead'){ev.preventDefault();say('Add a lead: name, phone, town, '+(window.SM_PREVIEW&&window.SM_PREVIEW.trade==='dryer-vent'?'dryers':'units'));}
     else if(h==='#'){ev.preventDefault();}
   });
   // Due Service: Contacted turns the row green.
